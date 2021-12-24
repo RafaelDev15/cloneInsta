@@ -3,6 +3,10 @@ import {View, Text, StyleSheet, Image, TouchableOpacity, Modal} from 'react-nati
 
 import Comments from '../Comments';
 
+import * as Animatable from 'react-native-animatable';
+
+const ButtonAnimated = Animatable.createAnimatableComponent(TouchableOpacity);
+
 export default function Feed(props){
 
     const [like, setLike] = useState(false);
@@ -17,9 +21,31 @@ export default function Feed(props){
     }
 
  /*function carregaIcone(likeada){
+
     return likeada > 1 ? require('../../img/likeada.png') :
     require('../../img/like.png')
   }*/
+
+  const adicionaLike = {
+    from: {
+      scale: 2
+    },
+    to: {
+      scale: 1,
+    },
+    
+  };
+
+  const tiraLike = {
+    from: {
+      scale: 0
+     
+    },
+    to: {
+      scale: 1,
+    },
+    
+  };
 
   return(
     <View>
@@ -39,13 +65,28 @@ export default function Feed(props){
 
       <View style={styles.areaBtn}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity onPress={handleLike}>
-            <Image
-            source={ like ? require('../../img/likeada.png') : require('../../img/heart.png') }
-            style={styles.iconeLike}
-            />
-          </TouchableOpacity>
 
+          
+              
+                {like ? (
+                  <ButtonAnimated animation={adicionaLike} onPress={handleLike}>
+                        <Image
+                        source={ like ? require('../../img/likeada.png') : require('../../img/heart.png') }
+                        style={styles.iconeLike}
+                        />
+                  </ButtonAnimated>
+                ) : (
+                  <ButtonAnimated animation={tiraLike} onPress={handleLike}>
+                    <Image
+                    source={ like ? require('../../img/likeada.png') : require('../../img/heart.png') }
+                    style={styles.iconeLike}
+                    />
+                  </ButtonAnimated>
+                )}
+                
+              
+            
+         
           <TouchableOpacity onPress={handleModal} style={styles.btnsend}>
             <Image
             source={require('../../img/comment.png')}
@@ -69,10 +110,12 @@ export default function Feed(props){
           </TouchableOpacity>   
         
       </View>
-     
+    
       <Text style={styles.descRodape}>
-        {props.data.descricao}
+          {props.data.descricao}
       </Text>
+
+      
 
     <Modal transparent={true} animationType='slide' visible={showModal} >
         <Comments data={props} closeModal={ () => setShowModal(false) } />
@@ -110,8 +153,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
   iconeLike:{
-    width: 25,
-    height: 25
+    width: 23,
+    height: 23
   },
   btnsend:{
     paddingLeft: 15
